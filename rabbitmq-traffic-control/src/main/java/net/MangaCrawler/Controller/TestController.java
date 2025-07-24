@@ -29,4 +29,21 @@ public class TestController {
         dynamicConsumer.addNewConsumer();
         return "New Consumer started.";
     }
+    
+    @PostMapping("/send-batch")
+    public String sendBatch() {
+    	int MessagesNumber = 100;
+        int intervalMillis = 100; 
+        for (int i = 1; i <= MessagesNumber; i++) {
+            String msg = "BatchJob-" + i;
+            producer.send(msg);
+
+            try {
+                Thread.sleep(intervalMillis); // ✅ 控制間隔
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // good practice
+            }
+        }
+        return "Sent "+ MessagesNumber+" messages.";
+    }
 }
